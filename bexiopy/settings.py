@@ -10,14 +10,18 @@ def get_setting(name):
 
     Define your defaults here.
     """
-    _BEXIO_AUTH_URL = 'https://office.bexio.com/oauth/authorize'
-    _BEXIO_CLIENT_ID = '9170616879.apps.bexio.com'
-    _BEXIO_CLIENT_SECRET = 'WbH5Di/6g+Te+cIElwJZI3jYMdo='
-    _BEXIO_TOKEN_URL = 'https://office.bexio.com/oauth/access_token'
-    _BEXIO_API_URL = 'https://office.bexio.com/api2.php'
+    # define these in your settings
+    _BEXIO_CLIENT_SECRET = ''
+    _BEXIO_CLIENT_ID = ''
+    _BEXIO_APPLICATION_SCOPES = []
+    _BEXIO_APPLICATION_REDIRECTION_URL = ''
 
-    _BEXIO_APPLICATION_SCOPES = ['kb_invoice_edit', ]
-    _BEXIO_APPLICATION_REDIRECTION_URL = 'http://localhost:8001/auth/'
+    # adjust if necessary
+    _BEXIO_AUTH_URL = 'https://office.bexio.com/oauth/authorize'
+    _BEXIO_TOKEN_URL = 'https://office.bexio.com/oauth/access_token'
+    _BEXIO_TOKEN_REFRESH_URL = 'https://office.bexio.com/oauth/refresh_token'
+    _BEXIO_API_URL = 'https://office.bexio.com/api2.php'
+    _BEXIO_CREDENTIALS_FILENAME = '.bxcred'
 
     defaults = {
         'BEXIO_AUTH_URL': getattr(
@@ -35,7 +39,7 @@ def get_setting(name):
             'BEXIO_CLIENT_SECRET',
             _BEXIO_CLIENT_SECRET
         ),
-        'BEXIO_APPLICATION_SCOPES': ','.join(
+        'BEXIO_APPLICATION_SCOPES': ' '.join(
             getattr(
                 settings,
                 'BEXIO_APPLICATION_SCOPES',
@@ -57,9 +61,15 @@ def get_setting(name):
             'BEXIO_TOKEN_URL',
             _BEXIO_TOKEN_URL
         ),
-
+        'BEXIO_TOKEN_REFRESH_URL': getattr(
+            settings,
+            'BEXIO_TOKEN_REFRESH_URL',
+            _BEXIO_TOKEN_REFRESH_URL
+        ),
+        'BEXIO_CREDENTIALS_FILENAME': getattr(
+            settings,
+            'BEXIO_CREDENTIALS_FILENAME',
+            _BEXIO_CREDENTIALS_FILENAME
+        ),
     }
     return defaults[name]
-"""
-state=_ae5fd8d6c69d6f72708dbbce723aa9dd38390af373:http://my.bexio.com/simplesaml/saml2/idp/SSOService.php?spentityid=easysys%26amp;cookieTime=1508419466
-"""

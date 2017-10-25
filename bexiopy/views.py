@@ -3,14 +3,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 
-from .api import BexiopyAuth
-
-
-class HomePage(TemplateView):
-    """
-    Basic home page.
-    """
-    template_name = "base_bs4.html"
+from .api import BexiopyAuth, Bexiopy
 
 
 class BexioAuthentication(TemplateView):
@@ -27,12 +20,16 @@ class BexioAuthentication(TemplateView):
         code = self.request.GET.get('code', None)
         state = self.request.GET.get('state', None)
         print(code, state)
-        if (code and state):
-
-            if auth_api.has_authenticated(code, state):
+        if code:
+            response = auth_api.get_api_access_token(code)
+            if response.status_code == 200:
                 messages.success(request, "Success")
-        
-        return redirect('/')
+            else:
+                messages.error(request, "Error")
+            return redirect('/')
+        else:
+            return redirect(BexiopyAuth.get_authentication_url())
+
 
         # elif not auth_api.has_authenticated:
         #     return redirect(auth_api.authenticate())
@@ -42,12 +39,3 @@ class BexioAuthentication(TemplateView):
         # else:
         #     messages.warning(request, auth_api['message'])
 
-
-"""
-https://office.bexio.com/oauth/authorize?
-client_id=9170616879.apps.bexio.com
-scope=kb_invoice_edit
-client_secret=WbH5Di/6g+Te+cIElwJZI3jYMdo=
-redirect_uri=https://www.oesah.de
-state=_ae5fd8d6c69d6f72708dbbce723aa9dd38390af373:http://my.bexio.com/simplesaml/saml2/idp/SSOService.php?spentityid=easysys%26amp;cookieTime=1508419466
-"""

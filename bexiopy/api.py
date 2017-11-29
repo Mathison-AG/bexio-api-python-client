@@ -331,13 +331,14 @@ class Client(object):
         Out: [{'id': 1, name': 'Herr'}, {'id': 2, name': 'Frau'}, ...]
 
     """
-    API_URL = 'https://office.bexio.com/api2.php'
-    OAUTH2_AUTH_URL = 'https://office.bexio.com/oauth/authorize'
-    OAUTH2_TOKEN_URI = 'https://office.bexio.com/oauth/access_token'
-    OAUTH2_REFRESH_TOKEN_URI = 'https://office.bexio.com/oauth/refresh_token'
-
     def __init__(self, *args, **kwargs):
-        # Client constructor
+        # construct auth data
+        self.API_URL = get_setting('BEXIO_API_URL')
+        self.OAUTH2_AUTH_URL = get_setting('BEXIO_AUTH_URL')
+        self.OAUTH2_TOKEN_URI = get_setting('BEXIO_TOKEN_URL')
+        self.OAUTH2_REFRESH_TOKEN_URI = get_setting('BEXIO_TOKEN_REFRESH_URL')
+
+        # construct client data
         self.auth = None
         self.config = {
             'client_id': get_setting('BEXIO_CLIENT_ID'),
@@ -346,6 +347,7 @@ class Client(object):
             'scope': get_setting('BEXIO_APPLICATION_SCOPES'),
             'state': uuid.uuid4()
         }
+        # get access_token data from file, if exists
         self.load_access_token_from_file()
 
     def set_client_id(self, client_id):

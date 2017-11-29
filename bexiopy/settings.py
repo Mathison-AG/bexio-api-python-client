@@ -63,11 +63,6 @@ def get_setting(name):
     _BEXIO_CREDENTIALS_FILENAME = '.bxcred'
 
     defaults = {
-        'BEXIO_AUTH_URL': getattr(
-            settings,
-            'BEXIO_AUTH_URL',
-            _BEXIO_AUTH_URL
-        ),
         'BEXIO_CLIENT_ID': getattr(
             settings,
             'BEXIO_CLIENT_ID',
@@ -89,6 +84,11 @@ def get_setting(name):
             settings,
             'BEXIO_APPLICATION_REDIRECTION_URL',
             _BEXIO_APPLICATION_REDIRECTION_URL
+        ),
+        'BEXIO_AUTH_URL': getattr(
+            settings,
+            'BEXIO_AUTH_URL',
+            _BEXIO_AUTH_URL
         ),
         'BEXIO_API_URL': getattr(
             settings,

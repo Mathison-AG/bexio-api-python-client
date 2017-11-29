@@ -62,7 +62,7 @@ Add Bexio API Python Client's URL patterns to your main :code:`urls.py`:
 
     urlpatterns = [
         ...
-        url(r'^', include('bexiopy.urls')),
+        url(r'bexiopy/', include('bexiopy.urls', namespace='bexiopy')),
         ...
     ]
 

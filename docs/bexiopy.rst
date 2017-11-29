@@ -17,11 +17,10 @@ Settings
     :undoc-members:
     :show-inheritance:
 
-Views
+Django Views
 ---------------------
 
 .. automodule:: bexiopy.views
     :members:
     :undoc-members:
-    :show-inheritance:
     :exclude-members: TemplateView

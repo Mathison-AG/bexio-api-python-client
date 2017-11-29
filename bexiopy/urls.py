@@ -6,6 +6,6 @@ from . import views
 
 urlpatterns = [
     url(r'auth/$',
-        views.BexioAuthentication.as_view(),
+        views.DjangoBexioAuthentication.as_view(),
         name='authenticate'),
 ]

@@ -1,30 +1,37 @@
 # -*- coding: utf-8 -*-
-from django.contrib import messages
-from django.shortcuts import redirect
-from django.views.generic import TemplateView
+try:
+    from django.contrib import messages
+    from django.shortcuts import redirect
+    from django.views.generic import TemplateView
+except ImportError:
+    class TemplateView(object):
+        pass
 
 from .api import Client
 
 
-class BexioAuthentication(TemplateView):
+class DjangoBexioAuthentication(TemplateView):
     """
-    This is the main view in which we authenticate ourselves with Bexio,
-    which is required to use the api.
+    This view is designed for Django which assists the developer in
+    authenticating the Django instance with Bexio, which is required
+    to use the api.
     """
-    def __init__(self, *args, **kwargs):
-        super(BexioAuthentication, self).__init__(*args, **kwargs)
-
     def get(self, request, *args, **kwargs):
-        code = request.GET.get('code')
+        """
+        Check the request for paramter :code:`code` and authenticate, if
+        it exists and redirect to index page. Otherwise redirect to Bexio
+        with the right parameters to authenticate your instance.
+
+        Todo:
+            * Add csrf token to authentication process
+        """
+        code = request.GET.get('code', None)
         client = Client()
         # If code is not set we need to get the authentication code
-        print(request.GET)
-        if not request.GET.get('code'):
-            print("no")
+        if not code:
             redirect_to = client.get_oauth2_auth_url()
-            return redirect(redirect_to)
         else:
-            print("yes")
             client.fetch_access_token_with_auth_code(code)
             messages.info(self.request, 'Successfully connected to Bexio.')
-            return redirect('/')
+            redirect_to = '/'
+        return redirect(redirect_to)

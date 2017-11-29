@@ -14,6 +14,8 @@ Contents:
    readme
    installation
    usage
+   bexiopy
+   bexiopy.resources
    contributing
    authors
    history

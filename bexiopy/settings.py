@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
+try:
+    from django.conf import settings
+    try:
+        settings.configure()  # for autodocs
+    except RuntimeError:
+        pass
+except ImportError:
+    settings = {}
 
 
 ALL_SCOPES = [
@@ -13,11 +20,34 @@ ALL_SCOPES = [
 
 def get_setting(name):
     """
-    Receive a name and try to return the corresponding setting. The
-    settings defined in the root settings of your django project have
+    Receive a name and try to return the corresponding setting.
+
+    Args:
+        name (str): name of setting
+
+    Returns:
+        mixed: value of requested setting
+
+    **Django**
+
+    The settings defined in the root settings of your django project have
     priority over defaults.
 
-    Define your defaults here.
+    **Python**
+
+    If you use the API without Django, you can define the settings in
+    this file. Just add the following to the top of the file with your
+    settings:
+
+    .. code-block:: python
+
+        settings = {
+            'BEXIO_AUTH_URL': '...',
+            'BEXIO_CLIENT_ID': '...',
+            'BEXIO_CLIENT_SECRET': '...',
+            ...
+        }
+
     """
     # define these in your settings
     _BEXIO_CLIENT_SECRET = ''

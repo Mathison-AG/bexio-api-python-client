@@ -100,13 +100,15 @@ Does the code actually work?
 Credits
 -------
 
-Tools used in rendering this package:
+Tools and libs used in creating this package:
 
 *  Cookiecutter_
 *  `cookiecutter-djangopackage`_
+*  `Christian Ruhstaller (bexio-api-php-client)`_
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`cookiecutter-djangopackage`: https://github.com/pydanny/cookiecutter-djangopackage
+.. _`Christian Ruhstaller (bexio-api-php-client)`: https://github.com/christianruhstaller/bexio-api-php-client
 
 
 Progress

@@ -8,16 +8,24 @@ from .base import BaseResource
 class InvoicesResource(BaseResource):
     """
     Resource to query the contacts endpoint.
+
+    Endpoint Docs:
+
+        https://docs.bexio.com/ressources/kb_invoice/
     """
-    endpoint = 'kb_invoice'
-    search_endpoint = 'kb_invoice/search'
+    ENDPOINT = 'kb_invoice'
+    ENDPOINT_SEARCH = 'kb_invoice/search'
 
     def show_pdf(self, pk):
         """
-        Return the PDF version of a given invoice.
+        Return the PDF version of a given invoice. Needs to be further
+        processed so you can extract the file from the response.
 
-        :param: pk, bexio id of invoice
-        :return: mixed
+        Args:
+            pk (str): Bexio id of invoice
+
+        Returns:
+            file: PDF file of invoice
         """
         path = _c(self.endpoint, pk, 'pdf')
         return self.client.call('GET', path)
@@ -26,8 +34,11 @@ class InvoicesResource(BaseResource):
         """
         Return the PDF version of a given invoice.
 
-        :param: pk, bexio id of invoice
-        :return: mixed
+        Args:
+            pk (str): Bexio id of invoice
+
+        Returns:
+            dict: Invoice that was copied
         """
         path = _c(self.endpoint, pk, 'copy')
         return self.client.call('POST', path, data)

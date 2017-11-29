@@ -7,14 +7,19 @@ from .base import BaseResource
 class ContactsResource(BaseResource):
     """
     Resource to query the contacts endpoint.
+
+    Endpoint Docs:
+
+        https://docs.bexio.com/ressources/contact/
     """
-    endpoint = 'contact'
-    search_endpoint = 'contact/search'
+    ENDPOINT = 'contact'
+    ENDPOINT_SEARCH = 'contact/search'
 
     def get_relations(self):
         """
         Get relations from contacts
 
-        :return: mixed
+        Returns:
+            list: List of contact relations
         """
         return self.client.call('GET', 'contact_relation', {})

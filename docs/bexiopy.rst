@@ -24,3 +24,4 @@ Views
     :members:
     :undoc-members:
     :show-inheritance:
+    :exclude-members: TemplateView

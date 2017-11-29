@@ -36,6 +36,9 @@ Install Bexio API Python Client::
 
     pip install bexio-api-python-client
 
+If you are using anything other than Django with this module, you need to
+write some more code to authenticate and use the API. Check out the Django
+parts of the module to see how it can be done.
 
 Django Integration
 ------------------

@@ -2,6 +2,15 @@
 from django.conf import settings
 
 
+ALL_SCOPES = [
+    'general',
+    'kb_invoice_edit',
+    'contact_edit',
+    'article_edit',
+    'kb_order_edit',
+]
+
+
 def get_setting(name):
     """
     Receive a name and try to return the corresponding setting. The
@@ -13,10 +22,10 @@ def get_setting(name):
     # define these in your settings
     _BEXIO_CLIENT_SECRET = ''
     _BEXIO_CLIENT_ID = ''
-    _BEXIO_APPLICATION_SCOPES = []
     _BEXIO_APPLICATION_REDIRECTION_URL = ''
 
     # adjust if necessary
+    _BEXIO_APPLICATION_SCOPES = ALL_SCOPES
     _BEXIO_AUTH_URL = 'https://office.bexio.com/oauth/authorize'
     _BEXIO_TOKEN_URL = 'https://office.bexio.com/oauth/access_token'
     _BEXIO_TOKEN_REFRESH_URL = 'https://office.bexio.com/oauth/refresh_token'

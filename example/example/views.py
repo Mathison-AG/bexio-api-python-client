@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.contrib import messages
-from django.shortcuts import redirect
 from django.views.generic import TemplateView
 
 from bexiopy.api import Bexiopy
@@ -14,8 +12,11 @@ class HomePage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomePage, self).get_context_data(**kwargs)
-        context['invoices'] = "Invoice: %s" % Bexiopy.invoices.get(oid=7)
-        context['contacts'] = "Contact: %s" % Bexiopy.contacts.get(oid=1)
+        bexio = Bexiopy()
+        context['invoices'] = bexio.invoices.all()
+        context['contacts'] = bexio.contacts.all()
+        context['salutations'] = bexio.general.get_salutations()
+        context['titles'] = bexio.general.get_titles()
 
         # data = {
         #     'contact_type_id': 1,

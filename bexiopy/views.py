@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 
-from .api import BexiopyAuth, Bexiopy
+from .api import Client
 
 
 class BexioAuthentication(TemplateView):
@@ -15,27 +15,16 @@ class BexioAuthentication(TemplateView):
         super(BexioAuthentication, self).__init__(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        auth_api = BexiopyAuth()
-
-        code = self.request.GET.get('code', None)
-        state = self.request.GET.get('state', None)
-        print(code, state)
-        if code:
-            response = auth_api.get_api_access_token(code)
-            if response.status_code == 200:
-                messages.success(request, "Success")
-            else:
-                messages.error(request, "Error")
-            return redirect('/')
+        code = request.GET.get('code')
+        client = Client()
+        # If code is not set we need to get the authentication code
+        print(request.GET)
+        if not request.GET.get('code'):
+            print("no")
+            redirect_to = client.get_oauth2_auth_url()
+            return redirect(redirect_to)
         else:
-            return redirect(BexiopyAuth.get_authentication_url())
-
-
-        # elif not auth_api.has_authenticated:
-        #     return redirect(auth_api.authenticate())
-
-        # if kwargs.get('code', None):
-        #     messages.success(request, auth_api['message'])
-        # else:
-        #     messages.warning(request, auth_api['message'])
-
+            print("yes")
+            client.fetch_access_token_with_auth_code(code)
+            messages.info(self.request, 'Successfully connected to Bexio.')
+            return redirect('/')

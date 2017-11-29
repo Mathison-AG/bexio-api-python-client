@@ -1,46 +1,49 @@
 # -*- coding: utf-8 -*-
-import requests
-import json
-import os
+from __future__ import absolute_import
 
-from .settings import get_setting
-
-import api
+from . import api
 
 
-class InvoicesManager:
-    endpoint = 'kb_invoice'
-
-    def get(self, oid=None, pdf=False):
-        return api.Bexiopy().make_request(self.endpoint)
-
-    def create(self):
-        return "InvoicesManager.create()"
+class BaseManager:
+    @property
+    def api(self):
+        return api.Bexiopy()
 
     def all(self):
-        return "InvoicesManager.all()"
+        return self.api.call(
+            endpoint=self.endpoint)
 
-
-class ContactsManager:
-    endpoint = 'contact'
-
-    def all(self):
-        return api.Bexiopy().make_request(
-            self.endpoint, )
-
-    def get(self, oid=None, pdf=False):
-        return api.Bexiopy().make_request(self.endpoint, oid=oid)
+    def get(self, oid=None):
+        return self.api.call(
+            endpoint=self.endpoint, oid=oid)
 
     def create(self, **data):
-        return api.Bexiopy().make_request(
-            self.endpoint, method="POST", data=data)
+        return self.api.call(
+            endpoint=self.endpoint, method="POST", data=data)
 
     def update(self, oid=None, **data):
-        return api.Bexiopy().make_request(
-            self.endpoint, method="POST", oid=oid, data=data)
+        return self.api.call(
+            endpoint=self.endpoint, method="PUT", data=data, oid=oid)
 
     def update_or_create(self, oid=None, **data):
-        if oid:
-            return self.update(oid=oid, **data)
-        else:
-            return self.create(**data)
+        return self.update(oid=oid, **data) if oid else self.create(**data)
+
+
+class InvoicesManager(BaseManager):
+    endpoint = 'kb_invoice'
+
+    def make_payment(self, oid, amount):
+        """
+        Not working API wise yet! Should record payment on invoice.
+        """
+        subendpoint = 'payment'
+        data = {
+            'value': amount,
+        }
+        self.api.call(
+            endpoint=self.endpoint, method="POST", data=data,
+            subendpoint=subendpoint, oid=oid)
+
+
+class ContactsManager(BaseManager):
+    endpoint = 'contact'

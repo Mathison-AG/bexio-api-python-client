@@ -120,8 +120,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-# Settings for Bexiopy
-BEXIO_CLIENT_SECRET = 'WbH5Di/6g+Te+cIElwJZI3jYMdo='
-BEXIO_CLIENT_ID = '9170616879.apps.bexio.com'
-BEXIO_APPLICATION_SCOPES = ['kb_invoice_edit', ]
-BEXIO_APPLICATION_REDIRECTION_URL = 'http://127.0.0.1:8000/bexiopy/auth/'
+from .secrets import *

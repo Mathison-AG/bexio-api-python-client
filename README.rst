@@ -11,7 +11,18 @@ Bexio API Python Client
 .. image:: https://codecov.io/gh/oesah/bexio-api-python-client/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/oesah/bexio-api-python-client
 
-Bexio API Python Client
+Bexio API Python Client. It works as a standalone lib in python, but needs
+additional work to get it started. There is a Django integration, that works
+out of the box, once you set it up properly as described later. If you wish to 
+use it with Python alone, you can take a look at the Django integration. It
+shows how you can use it with python alone.
+
+Features
+--------
+
+* API connection to your Bexio instance
+* Django integration
+* Creation & Auto-renewal of access token
 
 Documentation
 -------------
@@ -25,7 +36,14 @@ Install Bexio API Python Client::
 
     pip install bexio-api-python-client
 
-Add it to your `INSTALLED_APPS`:
+
+Django Integration
+------------------
+
+You can use the API directly with Django. There are URLs, Views and other
+helpers to integrate the API into your Django project.
+
+Add it to your :code:`INSTALLED_APPS`:
 
 .. code-block:: python
 
@@ -35,7 +53,7 @@ Add it to your `INSTALLED_APPS`:
         ...
     )
 
-Add Bexio API Python Client's URL patterns:
+Add Bexio API Python Client's URL patterns to your main :code:`urls.py`:
 
 .. code-block:: python
 
@@ -44,14 +62,29 @@ Add Bexio API Python Client's URL patterns:
 
     urlpatterns = [
         ...
-        url(r'^', include(bexiopy_urls)),
+        url(r'^', include('bexiopy.urls')),
         ...
     ]
 
-Features
---------
 
-* TODO
+Configure the minimum :code:`settings.py` (check docs for all options):
+
+.. code-block:: python
+
+    BEXIO_CLIENT_SECRET = 'my_secret'
+    BEXIO_CLIENT_ID = 'my_id'
+    BEXIO_APPLICATION_SCOPES = ['my_scope_1', 'my_scope_2']
+    BEXIO_APPLICATION_REDIRECTION_URL = 'https://example.com'
+
+
+Start the server and go to :code:`/bexiopy/auth/` and authenticate with Bexio.
+
+**i18n URLs**
+
+If you have internationalized URLs, then make sure you place the Bexiopy
+url outside the internationalized ones, so it can be called without any
+language code (:code:`/bexiopy/auth/` instead of :code:`/en/bexiopy/auth/`).
+
 
 Running Tests
 -------------
@@ -75,3 +108,78 @@ Tools used in rendering this package:
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`cookiecutter-djangopackage`: https://github.com/pydanny/cookiecutter-djangopackage
 
+
+Progress
+--------
+[ ] = Open
+
+[~] = In Progress
+
+[X] = Done
+
+[-] = Not possible / Ignored
+
+
+
+Contacts
+^^^^^^^^
+
+Contacts
+========
+
+* [X] List contacts
+* [X] Search contacts
+* [X] Show contact
+* [X] Create contact
+* [X] Overwrite contact
+* [X] Edit contact
+* [X] Delete contact
+* [ ] Bulk create contact
+
+
+Salutations
+===========
+
+* [ ] List salutations
+* [ ] Search salutations
+* [ ] Show salutation
+* [ ] Create salutation
+* [ ] Overwrite salutation
+* [ ] Edit salutation
+* [ ] Delete salutation
+
+
+Titles
+======
+
+* [ ] List titles
+* [ ] Search titles
+* [ ] Show title
+* [ ] Create title
+* [ ] Overwrite title
+* [ ] Edit title
+* [ ] Delete title
+
+
+Invoices
+^^^^^^^^
+* [X] List invoices 
+* [X] Search invoices 
+* [X] Show invoice 
+* [X] Create invoice 
+* [X] Overwrite invoice 
+* [X] Edit invoice 
+* [X] Delete invoice 
+* [X] Show invoice pdf 
+* [X] Copy invoice 
+* [ ] Issue invoice 
+* [ ] Mark invoice as sent 
+* [ ] Send invoice 
+* [ ] List comments 
+* [ ] Search comments 
+* [ ] Show comment 
+* [ ] Create comment 
+* [-] List payments 
+* [-] Show payments 
+* [-] Create payments 
+* [-] Delete payments 

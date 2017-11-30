@@ -41,7 +41,7 @@ class BaseResource(BaseClientResource):
         """
         return self.client.call('GET', self.ENDPOINT)
 
-    def search(self, params={}):
+    def search(self, params=[]):
         """
         Search for specific object and return response.
 
@@ -89,7 +89,8 @@ class BaseResource(BaseClientResource):
         Returns:
             dict: Object that has been updated
         """
-        return self.client.call('POST', self.ENDPOINT, data)
+        path = _c(self.ENDPOINT, pk)
+        return self.client.call('POST', path, data)
 
     def delete(self, pk):
         """

@@ -12,6 +12,40 @@ class InvoicesResource(BaseResource):
     Endpoint Docs:
 
         https://docs.bexio.com/ressources/kb_invoice/
+
+    Examples:
+
+    .. code-block:: python
+
+        from bexiopy.api import *
+
+        api = Bexiopy()
+
+        # create invoice
+        invoice = api.invoices.create(invoice_data)
+
+        # get an invoice
+        invoice = api.invoices.get(23)
+
+        # update invoice
+        invoice = api.invoices.update(23,
+            {
+                'user_id': 1,
+                'contact_id': 2,
+                'header': 'New Header'
+            }
+        )
+
+        # delete invoice
+        invoice = api.invoices.delete(23)
+
+        # search for invoices
+        api.invoices.search(
+            [
+                {'field': 'user_id', 'value': 1},
+                {'field': 'contact_id', 'value': 2}
+            ]
+        )
     """
     ENDPOINT = 'kb_invoice'
     ENDPOINT_SEARCH = 'kb_invoice/search'

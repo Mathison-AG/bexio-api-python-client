@@ -684,11 +684,14 @@ class Client(object):
         }
 
         if data:
+            if isinstance(data, (dict, list)):
+                import json
+                data = json.dumps(data)
             kwargs.update({
                 'data': data
             })
         url = self.API_URL + '/' + self.get_org() + '/' + path
-        print('\nRequesting: %s\n' % url)
+        print('\n%s: %s\n' % (method.upper(), url))
         response = getattr(requests, method.lower())(url, **kwargs)
 
         return response.json()
@@ -698,24 +701,6 @@ class Bexiopy(object):
     """
     The class to be used to query the Bexio API. Each resource is available
     via this class.
-
-    Usage:
-
-    .. code-block:: python
-
-        bexio = Bexiopy()
-
-        # get all contacts
-        contacts = bexio.contacts.all()
-
-        # create an invoice
-        contact = bexio.invoices.create(params={'attr1': 'val1', ...)
-
-        # search a contact
-        contact = bexio.contacts.search(params={'param1': 'some value'})
-
-        # get one specific contact with id 2
-        contact = bexio.contacts.get(pk=2)
 
     See API Resources section for available queries.
     """

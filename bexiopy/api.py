@@ -243,9 +243,7 @@ class OAuth2(object):
             dict: :code:`access_token` that is created from our request
         """
         uri = self.get_token_credential_uri()
-
         grant_type = self.get_grant_type()
-
         params = {
             'grant_type': grant_type
         }
@@ -266,7 +264,6 @@ class OAuth2(object):
         }
 
         response = requests.post(uri, data=params, headers=headers)
-
         return response.json()
 
     def get_token_credential_uri(self):

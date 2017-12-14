@@ -20,7 +20,7 @@ from . import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'bexiopy/', include('bexiopy.urls', namespace='bexiopy')),
+    url(r'bexiopy/', include('bexiopy.urls', namespace='bexiopy', app_name='bexiopy')),
 
     url(r'', views.HomePage.as_view()),
 ]

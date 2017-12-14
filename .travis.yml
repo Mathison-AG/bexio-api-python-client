@@ -7,16 +7,6 @@ python:
   - "3.4"
   - "2.7"
 
-env: 
-  - TOX_ENV=py35-django-18
-  - TOX_ENV=py34-django-18
-  - TOX_ENV=py27-django-18
-  - TOX_ENV=py35-django-19
-  - TOX_ENV=py34-django-19
-  - TOX_ENV=py27-django-19
-  - TOX_ENV=py35-django-110
-  - TOX_ENV=py34-django-110
-  - TOX_ENV=py27-django-110
 
 matrix:
   fast_finish: true

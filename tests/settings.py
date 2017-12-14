@@ -32,4 +32,7 @@ if django.VERSION >= (1, 10):
 else:
     MIDDLEWARE_CLASSES = ()
 
-from .secrets import *
+try:
+    from .secrets import *  # noqa
+except ImportError:
+    pass

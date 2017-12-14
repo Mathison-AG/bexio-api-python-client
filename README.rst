@@ -11,6 +11,11 @@ Bexio API Python Client
 .. image:: https://codecov.io/gh/oesah/bexio-api-python-client/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/oesah/bexio-api-python-client
 
+.. image:: https://api.codeclimate.com/v1/badges/a3b970ccfc691d06c052/maintainability
+   :target: https://codeclimate.com/github/oesah/bexio-api-python-client/maintainability
+   :alt: Maintainability
+
+
 Bexio API Python Client. It works as a standalone lib in python, but needs
 additional work to get it started. There is a Django integration, that works
 out of the box, once you set it up properly as described later. If you wish to 
@@ -68,6 +73,29 @@ Add Bexio API Python Client's URL patterns to your main :code:`urls.py`:
         url(r'bexiopy/', include('bexiopy.urls', namespace='bexiopy')),
         ...
     ]
+
+
+Docker
+------
+
+If you use docker, you can configure a volume to store the token:
+
+Example:
+.. code-block:: yaml
+    
+    # docker-compose.yml
+    volumes:
+        bexio_token: {}
+
+    services:
+        app:
+            volumes:
+                - bexio_token:/app/secrets
+
+    # app/Dockerfile
+    ...
+    RUN mkdir /app/secrets
+    ...
 
 
 Configure the minimum :code:`settings.py` (check docs for all options):

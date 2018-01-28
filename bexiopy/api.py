@@ -664,10 +664,9 @@ class Client(object):
             self.set_access_token(credentials)
             logger.info("\nSuccessfully refreshed token...\n")
             return credentials
-        elif 'error' in credentials:
-            logger.error('Credentials faulty: %s' % credentials)
-
-        logger.error('Illegal access token received when token was refreshed!')
+        else:
+            logger.error(
+                'Illegal access token received when token was refreshed!')
 
     def call(self, method, path, data={}):
         """
@@ -715,8 +714,8 @@ class Client(object):
         logger.info('[%s] %s' % (method.upper(), url))
         response = getattr(requests, method.lower())(url, **kwargs)
         response_json = response.json()
-        if 'error_code' in response:
-            raise ValueError(response_json)
+        if 'error_code' in response_json:
+            logger.error(response_json)
         return response_json
 
 

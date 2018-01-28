@@ -9,13 +9,35 @@ except ImportError:
     from urllib import urlencode
 
 import datetime
+import logging
 import os
 import requests
 import shelve
+import time
 import uuid
 
 from .settings import get_setting
 from .resources import contacts, general, invoices
+
+
+# create logger
+logger = logging.getLogger('Bexiopy')
+logger.setLevel(logging.DEBUG)
+
+# create console handler and set level to debug
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+# create formatter
+formatter = logging.Formatter(
+    '\n%(asctime)s - %(levelname)s - %(name)s - %(message)s\n'
+)
+
+# add formatter to ch
+ch.setFormatter(formatter)
+
+# add ch to logger
+logger.addHandler(ch)
 
 
 class OAuth2(object):
@@ -189,7 +211,7 @@ class OAuth2(object):
             auth.set_grant_type('refresh_token')  # important!
             auth.set_refresh_token(refresh_token)
 
-            credentials = auth.fetch_auth_token()
+            credentials = auth.generate_credentials_request()
 
             # ToDO(oesah): more examples for all grant_types
             ...
@@ -223,16 +245,6 @@ class OAuth2(object):
             None: nothing to return
         """
         self.grant_type = grant_type
-
-    def fetch_auth_token(self):
-        """
-        Call method that fetches the token and return
-        :code:`access_token`.
-
-        Returns:
-            dict: result of :func:`~bexiopy.api.OAuth2.generate_credentials_request`
-        """
-        return self.generate_credentials_request()
 
     def generate_credentials_request(self):
         """
@@ -498,6 +510,8 @@ class Client(object):
         diff = created + datetime.timedelta(seconds=expires_in - 30)
         # are 4 hours passed since creation date?
         expired = diff < datetime.datetime.now()
+        if expired:
+            logger.warning("\n\nTOKEN EXPIRED!\n\n")
         return expired
 
     def get_refresh_token(self):
@@ -528,54 +542,12 @@ class Client(object):
         auth.set_code(code)
         auth.set_redirect_uri(self.get_redirect_uri())
 
-        credentials = auth.fetch_auth_token()
+        credentials = auth.generate_credentials_request()
         if credentials and credentials['access_token']:
             credentials['created'] = datetime.datetime.now()
             self.set_access_token(credentials)
 
         return credentials
-
-    def refresh_token(self, refresh_token=''):
-        """
-        Get an (optional) `refresh_token` and create a new 'access_token'
-        from that.
-
-        .. note::
-            It's imporant to set the :code:`grant_type` to
-            **refresh_token** with
-            :code:`OAuth2().set_grant_type('refresh_token')`.
-
-        Returns:
-            dict: :code:`access_token` data on success
-
-        Raises:
-            ValueError: if no :code:`refresh_token` can be found or the
-                token could not be processed correctly.
-        """
-        print("refreshing token...\n")
-        if not refresh_token:
-            if not self.access_token['refresh_token']:
-                raise ValueError('Refresh token must be passed or set as part '
-                                 'of the access_token')
-
-            refresh_token = self.access_token['refresh_token']
-
-        auth = self.get_oauth2_service()
-        auth.set_grant_type('refresh_token')  # important!
-        auth.set_refresh_token(refresh_token)
-
-        credentials = auth.fetch_auth_token()
-
-        if credentials and credentials['access_token']:
-            credentials['created'] = datetime.datetime.now()
-            if not credentials['refresh_token']:
-                credentials['refresh_token'] = refresh_token
-            self.set_access_token(credentials)
-            print("successfully refreshed token...\n")
-            return credentials
-
-        raise ValueError('Illegal access token received when token was '
-                         'refreshed')
 
     def get_oauth2_service(self):
         """
@@ -642,13 +614,60 @@ class Client(object):
             self.access_token = token
         else:
             # let user know, he needs to authentiate with bexio
-            print(
+            logger.warning(
                 "You need to authorize this app with your "
                 "bexio instance. Open the following link and "
                 "you will be redirected back.\n\n%s" %
                 self.get_oauth2_auth_url())
             self.access_token = {}
         return self.access_token
+
+    def refresh_token(self, refresh_token=''):
+        """
+        Get an (optional) `refresh_token` and create a new 'access_token'
+        from that.
+
+        .. note::
+            It's imporant to set the :code:`grant_type` to
+            **refresh_token** with
+            :code:`OAuth2().set_grant_type('refresh_token')`.
+
+        Returns:
+            dict: :code:`access_token` data on success
+
+        Raises:
+            ValueError: if no :code:`refresh_token` can be found or the
+                token could not be processed correctly.
+        """
+        logger.info("refreshing token...\n")
+        if not refresh_token:
+            if not self.access_token['refresh_token']:
+                raise ValueError('Refresh token must be passed or set as part '
+                                 'of the access_token')
+
+            refresh_token = self.access_token['refresh_token']
+
+        auth = self.get_oauth2_service()
+        auth.set_grant_type('refresh_token')  # important!
+        auth.set_refresh_token(refresh_token)
+        credentials = auth.generate_credentials_request()
+
+        # wait for bexio request to finish
+        logger.info("Waiting for token from Bexio...")
+        time.sleep(2)
+
+        # set token once we received it
+        if credentials and ('error' not in credentials):
+            credentials['created'] = datetime.datetime.now()
+            if not credentials['refresh_token']:
+                credentials['refresh_token'] = refresh_token
+            self.set_access_token(credentials)
+            logger.info("\nSuccessfully refreshed token...\n")
+            return credentials
+        elif 'error' in credentials:
+            logger.error('Credentials faulty: %s' % credentials)
+
+        logger.error('Illegal access token received when token was refreshed!')
 
     def call(self, method, path, data={}):
         """
@@ -670,13 +689,15 @@ class Client(object):
         Returns:
             dict: The response of the request (:code:`response.json()`)
         """
+        self.load_access_token_from_file()
         if not self.access_token:
-            return ('You must authenticate with Bexio. Open the following '
-                    'URL and authenticate: \n\n %s' %
+            if not self.access_token:
+                raise ValueError(
+                    'You must authenticate with Bexio. Open the '
+                    'following URL and authenticate: \n\n %s' %
                     self.get_oauth2_auth_url())
 
-        if self.is_access_token_expired():
-            print("\n\nTOKEN EXPIRED!\n\n")
+        if not self.is_access_token_expired():
             self.refresh_token()
 
         kwargs = {
@@ -691,10 +712,12 @@ class Client(object):
                 'data': data
             })
         url = self.API_URL + '/' + self.get_org() + '/' + path
-        print('\n%s: %s\n' % (method.upper(), url))
+        logger.info('[%s] %s' % (method.upper(), url))
         response = getattr(requests, method.lower())(url, **kwargs)
-
-        return response.json()
+        response_json = response.json()
+        if 'error_code' in response:
+            raise ValueError(response_json)
+        return response_json
 
 
 class Bexiopy(object):
@@ -703,6 +726,20 @@ class Bexiopy(object):
     via this class.
 
     See API Resources section for available queries.
+
+    Usage:
+
+    .. code-block:: python
+
+        from bexiopy.api import Bexiopy
+
+        bexio = Bexiopy()
+
+        # get all contacts
+        contacts = bexio.contacts.all()
+
+        # get a specific invoice
+        invoice = bexio.invoices.get(2)
     """
     contacts = contacts.ContactsResource()
     invoices = invoices.InvoicesResource()

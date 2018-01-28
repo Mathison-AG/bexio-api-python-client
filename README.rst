@@ -104,9 +104,10 @@ Basic Usage
 
 See docs for basic usage: https://bexio-api-python-client.readthedocs.io/en/latest/bexiopy.html#bexiopy.api.Client
 
-You can also use helper functions, so you don't need to create the `call` every time (see docs).
+You can also use helper functions, so you don't need to create the :code:`call` every time (see docs).
 These helper functions are added over time, but you can use the API fully, with the
-`call` function. The helper methods only offer nicer ways to query the API.
+`call` function. The helper methods only offer nicer ways to query the API (e.g. :code:`Bexiopy().contacts.get(2)`).
+The progress of the helper functions are documented below under "Progress".
 
 
 Settings

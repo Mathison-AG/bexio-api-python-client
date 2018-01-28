@@ -41,3 +41,21 @@ class ContactsResource(BaseResource):
             list: List of contact relations
         """
         return self.client.call('GET', 'contact_relation', {})
+
+    def create_contact_relation(self, id, sub_id, desc=''):
+        """
+        Create a contact relationship
+
+        Args:
+            id (int): Bexio id of parent contact
+            sub_id (int): Bexio id of child contact
+
+        Returns:
+            dict: Dict of saved data
+        """
+        data = {
+            'contact_id': id,
+            'contact_sub_id': sub_id,
+            'description': desc
+        }
+        return self.client.call('POST', 'contact_relation', data)

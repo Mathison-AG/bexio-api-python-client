@@ -697,7 +697,7 @@ class Client(object):
                     'following URL and authenticate: \n\n %s' %
                     self.get_oauth2_auth_url())
 
-        if not self.is_access_token_expired():
+        if self.is_access_token_expired():
             self.refresh_token()
 
         kwargs = {

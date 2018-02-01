@@ -8,9 +8,10 @@ class BaseClientResource(object):
     """
     Base client resource that instantiates the :class:`~bexiopy.api.Client`.
     """
-    def __init__(self, *args, **kwargs):
+    @property
+    def client(self, *args, **kwargs):
         from ..api import Client
-        self.client = Client()
+        return Client()
 
 
 class BaseResource(BaseClientResource):

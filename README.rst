@@ -74,6 +74,11 @@ Add Bexio API Python Client's URL patterns to your main :code:`urls.py`:
         ...
     ]
 
+Start your server and visit the homepage (e.g. :code:`localhost:8000`).
+You should see a navigation bar at the top where you can click on "Authenticate"
+to create your token. Afterwards, you should see some data on the front page,
+if you have any data in your Bexio instance.
+
 
 Docker
 ------

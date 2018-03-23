@@ -609,8 +609,8 @@ class Client(object):
         """
         token_file = get_setting('BEXIO_CREDENTIALS_FILENAME')
         if default_storage.exists(token_file):
-            access_token = default_storage.open(token_file)
-            token = dict(access_token)
+            with default_storage.open(token_file) as access_token:
+                token = dict(access_token)
             access_token.close()
             self.access_token = token
         else:
@@ -692,10 +692,11 @@ class Client(object):
         self.load_access_token_from_file()
         if not self.access_token:
             if not self.access_token:
-                raise ValueError(
+                print(
                     'You must authenticate with Bexio. Open the '
                     'following URL and authenticate: \n\n %s' %
                     self.get_oauth2_auth_url())
+                return
 
         if self.is_access_token_expired():
             self.refresh_token()

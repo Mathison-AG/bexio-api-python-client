@@ -447,7 +447,7 @@ class Client(object):
         d = default_storage.open(get_setting('BEXIO_CREDENTIALS_FILENAME'), 'w')
 
         # write json to file
-        json.dump(access_token, d)
+        json.dump(access_token, d, indent=4, sort_keys=True, default=str)
 
         # closing is important!
         d.close()

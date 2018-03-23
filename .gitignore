@@ -50,3 +50,6 @@ bexiopy.sublime-project
 .bxcred
 *.sublime-workspace
 secrets.py
+
+Pipfile
+Pipfile.lock

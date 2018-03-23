@@ -12,9 +12,10 @@ import datetime
 import logging
 import os
 import requests
-import shelve
 import time
 import uuid
+
+from django.core.files.storage import default_storage
 
 from .settings import get_setting
 from .resources import contacts, general, invoices
@@ -442,7 +443,7 @@ class Client(object):
         Returns:
             None: nothing to return
         """
-        d = shelve.open(get_setting('BEXIO_CREDENTIALS_FILENAME'))
+        d = default_storage.open(get_setting('BEXIO_CREDENTIALS_FILENAME'))
 
         # write json to file
         for k, v in access_token.items():
@@ -607,8 +608,8 @@ class Client(object):
             dict: :code:`access_token` loaded from file
         """
         token_file = get_setting('BEXIO_CREDENTIALS_FILENAME')
-        if os.path.exists(token_file):
-            access_token = shelve.open(token_file)
+        if default_storage.exists(token_file):
+            access_token = default_storage.open(token_file)
             token = dict(access_token)
             access_token.close()
             self.access_token = token

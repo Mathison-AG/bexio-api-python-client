@@ -443,7 +443,7 @@ class Client(object):
         Returns:
             None: nothing to return
         """
-        d = default_storage.open(get_setting('BEXIO_CREDENTIALS_FILENAME'))
+        d = default_storage.open(get_setting('BEXIO_CREDENTIALS_FILENAME'), 'w')
 
         # write json to file
         for k, v in access_token.items():
@@ -609,7 +609,7 @@ class Client(object):
         """
         token_file = get_setting('BEXIO_CREDENTIALS_FILENAME')
         if default_storage.exists(token_file):
-            with default_storage.open(token_file) as access_token:
+            with default_storage.open(token_file, 'r') as access_token:
                 token = dict(access_token)
             access_token.close()
             self.access_token = token

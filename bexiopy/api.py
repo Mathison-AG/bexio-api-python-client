@@ -502,7 +502,7 @@ class Client(object):
         expires_in = 0
 
         if self.access_token['created']:
-            created = datetime.strptime(self.access_token['created'], '%b %d %Y %I:%M%p')
+            created = datetime.datetime.strptime(self.access_token['created'], '%b %d %Y %I:%M%p')
 
         if self.access_token['expires_in']:
             expires_in = self.access_token['expires_in']

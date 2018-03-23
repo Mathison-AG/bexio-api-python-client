@@ -14,6 +14,7 @@ import os
 import requests
 import time
 import uuid
+import json
 
 from django.core.files.storage import default_storage
 
@@ -446,8 +447,7 @@ class Client(object):
         d = default_storage.open(get_setting('BEXIO_CREDENTIALS_FILENAME'), 'w')
 
         # write json to file
-        for k, v in access_token.items():
-            d[k] = v
+        json.dump(access_token, d)
 
         # closing is important!
         d.close()
@@ -610,7 +610,7 @@ class Client(object):
         token_file = get_setting('BEXIO_CREDENTIALS_FILENAME')
         if default_storage.exists(token_file):
             with default_storage.open(token_file, 'r') as access_token:
-                token = dict(access_token)
+                token = json.load(access_token)
             access_token.close()
             self.access_token = token
         else:

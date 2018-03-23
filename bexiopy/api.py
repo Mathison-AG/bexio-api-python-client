@@ -505,7 +505,7 @@ class Client(object):
             created = datetime.strptime(self.access_token['created'], '%b %d %Y %I:%M%p')
 
         if self.access_token['expires_in']:
-            expires_in = datetime.strptime(self.access_token['expires_in'], '%b %d %Y %I:%M%p')
+            expires_in = self.access_token['expires_in']
 
         # created + ~4 hours
         diff = created + datetime.timedelta(seconds=expires_in - 30)

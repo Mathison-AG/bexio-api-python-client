@@ -12,9 +12,11 @@ import datetime
 import logging
 import os
 import requests
-import shelve
 import time
 import uuid
+import json
+
+from django.core.files.storage import default_storage
 
 from .settings import get_setting
 from .resources import contacts, general, invoices
@@ -442,11 +444,10 @@ class Client(object):
         Returns:
             None: nothing to return
         """
-        d = shelve.open(get_setting('BEXIO_CREDENTIALS_FILENAME'))
+        d = default_storage.open(get_setting('BEXIO_CREDENTIALS_FILENAME'), 'w')
 
         # write json to file
-        for k, v in access_token.items():
-            d[k] = v
+        json.dump(access_token, d, indent=4, sort_keys=True, default=str)
 
         # closing is important!
         d.close()
@@ -501,7 +502,7 @@ class Client(object):
         expires_in = 0
 
         if self.access_token['created']:
-            created = self.access_token['created']
+            created = datetime.datetime.strptime(self.access_token['created'], "%Y-%m-%d %H:%M:%S.%f")
 
         if self.access_token['expires_in']:
             expires_in = self.access_token['expires_in']
@@ -607,9 +608,9 @@ class Client(object):
             dict: :code:`access_token` loaded from file
         """
         token_file = get_setting('BEXIO_CREDENTIALS_FILENAME')
-        if os.path.exists(token_file):
-            with shelve.open(token_file) as access_token:
-                token = dict(access_token)
+        if default_storage.exists(token_file):
+            with default_storage.open(token_file, 'r') as access_token:
+                token = json.load(access_token)
             access_token.close()
             self.access_token = token
         else:

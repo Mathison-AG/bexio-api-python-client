@@ -1,6 +1,6 @@
 # Your app requirements.
 -r ../requirements_test.txt
-django<2.0
+django==4.0.2
 django-extensions
 
 # Your app in editable mode.

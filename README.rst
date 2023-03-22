@@ -236,3 +236,9 @@ Invoices
 * [-] Show payments 
 * [-] Create payments 
 * [-] Delete payments 
+
+
+Sponsorship
+-----------
+
+This project is maintained by `Mathison AG | Mobile & Web Development <https://mathison.ch>`_.

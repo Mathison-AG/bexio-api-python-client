@@ -242,3 +242,9 @@ Sponsorship
 -----------
 
 This project is maintained by `Mathison AG | Mobile & Web Development <https://mathison.ch>`_.
+
+Used by
+-------
+
+* `Stella Gastro | The best Restaurants, Bars and Cafés in Switzerland <https://stellagastro.ch>`_.
+* `Lancer Express | The Swiss Army Knife for Freelancers <https://my.lancer.express>`_.
